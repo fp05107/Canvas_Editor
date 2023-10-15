@@ -15,6 +15,12 @@ const StackNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Home"
+          options={{headerShown: false}}
+          component={Home}
+        />
+
+        <Stack.Screen
           name="MyCanvas"
           options={{headerShown: false}}
           component={MyCanvas}
@@ -26,9 +32,7 @@ const StackNavigator = () => {
         <Stack.Screen name="MyProjects" options={{headerShown: false}}>
           {props => <MyProjects />}
         </Stack.Screen>
-        <Stack.Screen name="Home" options={{headerShown: false}}>
-          {props => <Home />}
-        </Stack.Screen>
+
         <Stack.Screen name="CreateCanvas" options={{headerShown: false}}>
           {props => <CreateCanvas />}
         </Stack.Screen>

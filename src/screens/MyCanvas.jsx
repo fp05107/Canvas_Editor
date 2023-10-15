@@ -133,10 +133,27 @@
 // }}
 
 import React, {useState, useRef} from 'react';
-import {View, Text, TouchableOpacity, TextInput, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+} from 'react-native';
 import Svg, {Circle, Text as SVGText} from 'react-native-svg';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {
+  faArrowLeft,
+  faRotateLeft,
+  faRotateRight,
+  faXmark,
+  faCheck,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
+import CONSTANTS from '../config/Constants.config';
+import COLORS from '../config/colors.config';
 
-export default function MyCanvas() {
+export default function MyCanvas(props) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawnItems, setDrawnItems] = useState([]);
   const [text, setText] = useState('');
@@ -145,6 +162,10 @@ export default function MyCanvas() {
   // Maintain separate history stacks for drawing and text actions
   const drawingHistoryRef = useRef([]);
   const textHistoryRef = useRef([]);
+
+  console.log('====================================');
+  console.log(props.route.params.text);
+  console.log('====================================');
 
   const handlePress = e => {
     if (isDrawing) {
@@ -201,7 +222,6 @@ export default function MyCanvas() {
       drawingHistoryRef.current.pop(); // Remove the last drawing action
       setDrawnItems([...textHistoryRef.current, ...drawingHistoryRef.current]);
     } else if (!isDrawing && textHistoryRef.current.length > 0) {
-   
       textHistoryRef.current.pop(); // Remove the last text action
       setDrawnItems([...textHistoryRef.current, ...drawingHistoryRef.current]);
     }
@@ -214,14 +234,28 @@ export default function MyCanvas() {
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <FontAwesomeIcon size={30} icon={faArrowLeft} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <FontAwesomeIcon size={30} icon={faRotateRight} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <FontAwesomeIcon size={30} icon={faRotateLeft} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Save</Text>
+        </TouchableOpacity>
+      </View>
       <Svg
-        width={300}
-        height={300}
+        width={CONSTANTS.windowWidth * 0.95}
+        height={CONSTANTS.windowHeight * 0.7}
         onTouchStart={() => setIsDrawing(true)}
         onTouchEnd={() => setIsDrawing(false)}
         onTouchMove={handlePress}
-        style={{borderWidth: 1, borderColor: 'black'}}>
+        style={{borderWidth: 1, borderColor: 'black', borderRadius: 5}}>
         {drawnItems.map(item => item)}
       </Svg>
 
@@ -292,3 +326,31 @@ export default function MyCanvas() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    width: CONSTANTS.windowWidth,
+    justifyContent: 'space-between',
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.Secondary,
+    backgroundColor: COLORS.Primary,
+    marginBottom: 20,
+  },
+  inputBox: {
+    width: CONSTANTS.windowWidth * 0.9,
+    alignSelf: 'center',
+    margin: 10,
+  },
+  textButton: {
+    width: CONSTANTS.windowWidth,
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1,
+    backgroundColor: COLORS.Primary, // Button background color
+    padding: 15,
+    alignItems: 'center',
+  },
+});
