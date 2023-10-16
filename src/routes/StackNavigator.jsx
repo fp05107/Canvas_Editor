@@ -7,6 +7,7 @@ import Home from '../screens/Home';
 import CreateCanvas from '../screens/CreateCanvas';
 import Canvas from '../screens/MyCanvas';
 import MyCanvas from '../screens/MyCanvas';
+import DraggableText from '../components/DraggableText';
 
 const Stack = createStackNavigator();
 
@@ -19,13 +20,11 @@ const StackNavigator = () => {
           options={{headerShown: false}}
           component={Home}
         />
-
         <Stack.Screen
           name="MyCanvas"
           options={{headerShown: false}}
           component={MyCanvas}
         />
-
         <Stack.Screen name="Splash" options={{headerShown: false}}>
           {props => <Splash />}
         </Stack.Screen>

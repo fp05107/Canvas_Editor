@@ -1,3 +1,4 @@
+import {View, Text} from 'react-native';
 import React from 'react';
 import StackNavigator from './src/routes/StackNavigator';
 import {NativeBaseProvider} from 'native-base';

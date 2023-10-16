@@ -1,137 +1,3 @@
-// import React, {useState, useRef} from 'react';
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   TextInput,
-//   StyleSheet,
-// } from 'react-native';
-// import Svg, {Circle, Rect, Text as SVGText} from 'react-native-svg';
-
-// export default function MyCanvas() {
-
-//   const [isDrawing, setIsDrawing] = useState(false);
-//   const [drawnItems, setDrawnItems] = useState([]);
-//   const [text, setText] = useState('');
-//   const [textSize, setTextSize] = useState(20);
-
-//   // Maintain a history stack for undo functionality
-//   const historyRef = useRef([]);
-//   const historyIndexRef = useRef(-1);
-
-//   const handlePress = (e) => {
-//     if (isDrawing) {
-//       const newItem = <Circle cx={e.nativeEvent.locationX} cy={e.nativeEvent.locationY} r="5" fill="black" key={drawnItems.length} />;
-//       setDrawnItems([...drawnItems, newItem]);
-
-//       // Add the drawing action to the history stack
-//       historyRef.current.push(newItem);
-//       historyIndexRef.current = historyRef.current.length - 1;
-//     }
-//   };
-
-//   const addText = () => {
-//     if (text) {
-//       const newText = <SVGText x="50" y="50" fontSize={textSize} fill="black" key={drawnItems.length}>{text}</SVGText>;
-//       setDrawnItems([...drawnItems, newText]);
-
-//       // Add the text action to the history stack
-//       historyRef.current.push(newText);
-//       historyIndexRef.current = historyRef.current.length - 1;
-//     }
-//   };
-
-//   const increaseTextSize = () => {
-//     setTextSize(textSize + 5);
-//   };
-
-//   const decreaseTextSize = () => {
-//     if (textSize > 5) {
-//       setTextSize(textSize - 5);
-//     }
-//   };
-
-//   const undo = () => {
-//     if (historyIndexRef.current >= 0) {
-//       historyRef.current.pop(); // Remove the last action from history
-//       historyIndexRef.current--;
-//       setDrawnItems([...historyRef.current]);
-//     }
-//   };
-
-//   const clearCanvas = () => {
-//     setDrawnItems([]);
-//     historyRef.current = [];
-//     historyIndexRef.current = -1;
-//   };
-//   return (
-//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-//       <Svg
-//         width={300}
-//         height={300}
-//         onTouchStart={() => setIsDrawing(true)}
-//         onTouchEnd={() => setIsDrawing(false)}
-//         onTouchMove={handlePress}
-//         style={{borderWidth: 1, borderColor: 'black'}}>
-//         {drawnItems.map(item => item)}
-//       </Svg>
-
-//       <TouchableOpacity
-//         style={{
-//           backgroundColor: 'green',
-//           padding: 10,
-//           borderRadius: 5,
-//           paddingHorizontal: 15,
-//         }}
-//         onPress={addText}>
-//         <Text style={{color: '#FFF', fontWeight: 'bold'}}>Add Text</Text>
-//       </TouchableOpacity>
-
-//       <TextInput
-//         style={{
-//           borderWidth: StyleSheet.hairlineWidth,
-//           borderRadius: 5,
-//           paddingHorizontal: 10,
-//           marginTop: 5,
-//         }}
-//         placeholder="Enter text"
-//         value={text}
-//         onChangeText={text => setText(text)}
-//       />
-//       <TouchableOpacity
-//         style={{
-//           backgroundColor: 'green',
-//           padding: 10,
-//           borderRadius: 5,
-//           paddingHorizontal: 15,
-//         }}
-//         onPress={increaseTextSize}>
-//         <Text>Increase Text Size</Text>
-//       </TouchableOpacity>
-//       <TouchableOpacity onPress={undo} style={{ marginRight: 10 }}>
-//           <Text>Undo</Text>
-//         </TouchableOpacity>
-//       <TouchableOpacity
-//         style={{
-//           backgroundColor: 'green',
-//           padding: 10,
-//           borderRadius: 5,
-//           paddingHorizontal: 15,
-//         }}
-//         onPress={clearCanvas}>
-//         <Text style={{color: '#FFF', fontWeight: 'bold'}}>Clear</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-
-// style={{
-//   borderWidth: StyleSheet.hairlineWidth,
-//   borderRadius: 5,
-//   paddingHorizontal: 10,
-//   marginTop: 5,
-// }}
-
 import React, {useState, useRef} from 'react';
 import {
   View,
@@ -150,8 +16,9 @@ import {
   faCheck,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import CONSTANTS from '../config/Constants.config';
+import CONSTANTS from '../config/constants.config';
 import COLORS from '../config/colors.config';
+import {useNavigation} from '@react-navigation/native';
 
 export default function MyCanvas(props) {
   const [isDrawing, setIsDrawing] = useState(false);
@@ -159,13 +26,15 @@ export default function MyCanvas(props) {
   const [text, setText] = useState('');
   const [textSize, setTextSize] = useState(20);
 
+  const navigation = useNavigation();
+
   // Maintain separate history stacks for drawing and text actions
   const drawingHistoryRef = useRef([]);
   const textHistoryRef = useRef([]);
 
-  console.log('====================================');
-  console.log(props.route.params.text);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(props.route.params.text);
+  // console.log('====================================');
 
   const handlePress = e => {
     if (isDrawing) {
@@ -215,9 +84,6 @@ export default function MyCanvas(props) {
   };
 
   const undo = () => {
-    console.log('====================================');
-    console.log(textHistoryRef.current);
-    console.log('====================================');
     if (isDrawing && drawingHistoryRef.current.length > 0) {
       drawingHistoryRef.current.pop(); // Remove the last drawing action
       setDrawnItems([...textHistoryRef.current, ...drawingHistoryRef.current]);
@@ -227,26 +93,36 @@ export default function MyCanvas(props) {
     }
   };
 
+  const redo = () => {
+    
+  }
+
   const clearCanvas = () => {
     setDrawnItems([]);
     drawingHistoryRef.current = [];
     textHistoryRef.current = [];
   };
 
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <View style={styles.header}>
-        <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faArrowLeft} />
+        <TouchableOpacity onPress={handleBackPress}>
+          <FontAwesomeIcon color="#FFF" size={30} icon={faArrowLeft} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faRotateRight} />
+          <FontAwesomeIcon color="#FFF" size={30} icon={faRotateRight} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faRotateLeft} />
+          <FontAwesomeIcon color="#FFF" size={30} icon={faRotateLeft} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Save</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold', color: '#FFF'}}>
+            Save
+          </Text>
         </TouchableOpacity>
       </View>
       <Svg

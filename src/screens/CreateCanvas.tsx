@@ -9,10 +9,11 @@ import {
   faCheck,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
-import CONSTANTS from '../config/Constants.config';
+import CONSTANTS from '../config/constants.config';
 import COLORS from '../config/colors.config';
-import {Input, StatusBar} from 'native-base';
+import {Input, ScrollView, StatusBar} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
+import CanvasBoard from '../components/CanvasBoard/CanvasBoard';
 
 const CreateCanvas = () => {
   const [input, setInput] = useState('');
@@ -20,41 +21,59 @@ const CreateCanvas = () => {
   const handleTickPress = () => {
     navigation.navigate('MyCanvas', {text: input});
   };
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* <StatusBar hidden /> */}
       <View style={styles.header}>
-        <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faArrowLeft} />
+        <TouchableOpacity onPress={handleBackPress}>
+          <FontAwesomeIcon color="#FFF" size={30} icon={faArrowLeft} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faXmark} />
+          <FontAwesomeIcon color="#FFF" size={30} icon={faXmark} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleTickPress}>
-          <FontAwesomeIcon size={30} icon={faCheck} />
+          <FontAwesomeIcon color="#FFF" size={30} icon={faCheck} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <FontAwesomeIcon size={30} icon={faTrash} />
+          <FontAwesomeIcon color="#FFF" size={30} icon={faTrash} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold'}}>
+            Save
+          </Text>
         </TouchableOpacity>
         {/* <FontAwesomeIcon size={30} icon={faRotateRight} /> */}
         {/* <FontAwesomeIcon size={30} icon={faRotateLeft} /> */}
         <Text></Text>
       </View>
 
-      <View style={styles.inputBox}>
+      <View
+        style={{
+          flex: 1,
+          height: CONSTANTS.windowHeight * 0.94,
+          width: CONSTANTS.windowWidth,
+          alignSelf: 'center',
+        }}>
+        <CanvasBoard />
+      </View>
+
+      {/* <View style={styles.inputBox}>
         <Input
           value={input}
           onChangeText={value => setInput(value)}
           variant="outline"
           placeholder="Type Something....."
         />
-      </View>
+      </View> */}
 
-      <TouchableOpacity style={styles.textButton}>
+      {/* <TouchableOpacity style={styles.textButton}>
         <Text>TEXT</Text>
-      </TouchableOpacity>
-    </View>
+      </TouchableOpacity> */}
+    </ScrollView>
   );
 };
 

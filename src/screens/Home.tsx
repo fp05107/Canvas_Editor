@@ -1,30 +1,28 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Box, Button} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlus} from '@fortawesome/free-solid-svg-icons';
+import SignatureScreen from '../components/Sign';
+import DraggableText from '../components/DraggableText';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigation = useNavigation();
 
-  function handleCreateNew() {
+  const handleCreateNew = () => {
     navigation.navigate('CreateCanvas');
-  }
-  function handleMyProjects() {
+  };
+
+  const handleMyProjects = () => {
     navigation.navigate('MyProjects');
-  }
+  };
 
   return (
-    <Box alignItems="center">
+    <Box bg={'black'} flex={1}>
       <Button m={10} onPress={handleCreateNew}>
         Create New
       </Button>
-
-      {/* <TouchableOpacity>
-        <FontAwesomeIcon icon={faPlus} />
-      </TouchableOpacity> */}
-
       <Button onPress={handleMyProjects}>My Projects</Button>
     </Box>
   );
